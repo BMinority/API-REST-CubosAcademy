@@ -1,3 +1,8 @@
+# Bruno Coelho
+### Abaixo fiz uma cópia do readme do Exercício Resolvido 1 da Cubos Academy sobre a aula de API REST.
+
+### Declarei as respostas sem observar a aula de resolução deste exercício para de fato atestar que aprendi e consegui implementar uma API.
+
 ![](https://i.imgur.com/xG74tOh.png)
 
 # Exercício Resolvido 1
