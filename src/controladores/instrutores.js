@@ -1,6 +1,6 @@
 //importar o banco de dados
-const bancodedados = require('../bancodedados/bancoDeDados');
-let { instrutores, identificadorInstrutor, aulas } = require('../bancodedados/bancoDeDados')
+let { instrutores, identificadorInstrutor } = require('../bancodedados/bancodedados')
+const bancodedados = require('../bancodedados/bancodedados')
 
 //Funções de controle
 const listarInstrutores = (req, res) => {
@@ -127,10 +127,58 @@ const cadastrarAula = (req, res) => {
         return res.status(400).json({ mensagem: `A descrição é obrigatória.` });
     }
 
-    instrutor.aulas.push({ titulo, descricao }); // Adiciona a aula à lista de aulas do instrutor
+    instrutor.aulas.push({ titulo, descricao }); // Adicionar a aula à lista de aulas do instrutor
 
     res.status(201).json({ mensagem: `A aula foi cadastrada.` });
 };
+
+const listarAulas = (req, res) => {
+    // Juntar todas as aulas de todos os instrutores em um array
+    const todasAulas = bancodedados.instrutores.flatMap(instrutor => instrutor.aulas);
+
+    // Retorna todas as aulas
+    res.json(todasAulas);
+};
+
+const exibirDetalhesAula = (req, res) => {
+    let { id } = req.params;
+
+    //sempre verificar se o id é um Number
+    id = Number(id);
+    if (isNaN(id)) {
+        return res.status(400).json({ mensagem: 'ID da aula inválido.' });
+    }
+
+    // Busco o instrutor pelo id
+    const instrutor = bancodedados.instrutores.find(instrutor => instrutor.id === id);
+
+    // Verifico se o instrutor foi encontrado
+    if (!instrutor) {
+        return res.status(404).json({ mensagem: 'Instrutor não encontrado.' });
+    }
+
+    // Verifico se o instrutor possui aulas
+    if (!instrutor.aulas || instrutor.aulas.length === 0) {
+        return res.status(404).json({ mensagem: 'O instrutor não possui aulas cadastradas.' });
+    }
+
+    // Resposta: detalhes da primeira aula do instrutor em formato JSON
+    res.json(instrutor.aulas[0]);
+};
+
+const listarAulasInstrutor = (req, res) => {
+    const { id } = req.params;
+
+    const instrutor = bancodedados.instrutores.find(instrutor => instrutor.id === Number(id));
+
+    if (!instrutor) {
+        return res.status(404).json({ mensagem: 'Instrutor não encontrado.' });
+    }
+
+    // Retorna as aulas do instrutor em formato JSON
+    res.json(instrutor.aulas);
+};
+
 
 
 //exportar as funções de controle na forma de objeto
@@ -141,7 +189,10 @@ const funcoesDeControle = {
     atualizarInstrutor,
     atualizarStatusInstrutor,
     excluirInstrutor,
-    cadastrarAula
+    cadastrarAula,
+    listarAulas,
+    exibirDetalhesAula,
+    listarAulasInstrutor
 }
 
 module.exports = funcoesDeControle;

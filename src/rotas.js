@@ -1,6 +1,17 @@
 const express = require('express');
 
-const { listarInstrutores, obterInstrutor, cadastrarInstrutor, atualizarInstrutor, atualizarStatusInstrutor, excluirInstrutor, cadastrarAula } = require('./controladores/instrutores');
+const {
+    listarInstrutores,
+    obterInstrutor,
+    cadastrarInstrutor,
+    atualizarInstrutor,
+    atualizarStatusInstrutor,
+    excluirInstrutor,
+    cadastrarAula,
+    listarAulas,
+    exibirDetalhesAula,
+    listarAulasInstrutor
+} = require('./controladores/instrutores');
 
 const rotas = express();
 
@@ -17,6 +28,13 @@ rotas.patch('/instrutores/:id/status', atualizarStatusInstrutor);
 
 rotas.delete('/instrutores/:id', excluirInstrutor);
 
-rotas.post('/instrtores/cadastrar-aula/:id', cadastrarAula);
+//implementação com base no exercicio resolvido 1
+rotas.post('/instrtores/aulas/cadastrar-aula/:id', cadastrarAula);
+
+rotas.get('/aulas', listarAulas);
+
+rotas.get('/instrutores/aulas/:id', exibirDetalhesAula);
+
+rotas.get('/instrutores/:id/aulas', listarAulasInstrutor);
 
 module.exports = rotas;
